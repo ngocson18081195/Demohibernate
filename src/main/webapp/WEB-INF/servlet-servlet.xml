@@ -47,6 +47,14 @@
         <!--<property name="resolveLazily" value="true"/>-->
     </bean>
 
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+
+        <property name="basenames">
+            <list>
+                <value>message.valid</value>
+            </list>
+        </property>
+    </bean>
     <tx:annotation-driven transaction-manager="transactionManager"></tx:annotation-driven>
     <context:component-scan base-package="son.*"/>
     <mvc:annotation-driven/>

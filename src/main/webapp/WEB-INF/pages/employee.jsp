@@ -17,7 +17,17 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script>
+        $( function() {
+            $( "#da" ).datepicker({
+                dateFormat: "dd/mm/yy"
+            });
+        } );
+    </script>
 </head>
 <body>
 <div class="col-md-offset-4">
@@ -35,7 +45,8 @@
         </tr>
         <tr>
             <td>BirthDay</td>
-            <td><form:input path="date"/></td>
+            <td><form:input id="da" path="date" readonly=""/></td>
+            <td><form:errors path="date"/></td>
         </tr>
         <tr>
             <td>Image</td>

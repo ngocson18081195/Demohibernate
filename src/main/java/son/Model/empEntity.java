@@ -5,6 +5,8 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 /**
@@ -22,6 +24,7 @@ public class empEntity {
     @Column(name = "birthday")
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "dd/MM/yyyy")
+//    @NotNull(message = "Invalid Date")
     private Date date;
     @Column(name = "image")
     private String image;

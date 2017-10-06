@@ -3,13 +3,13 @@ package son.control;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
+import son.IMP.empValid;
 import son.Model.empEntity;
 import son.Service.empService;
 
@@ -25,12 +25,15 @@ import java.util.Date;
 public class control {
     @Autowired
     private empService empService;
+    @Autowired
+    private empValid empValid;
 
     @InitBinder
     public void initBinder(WebDataBinder webDataBinder) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         simpleDateFormat.setLenient(false);
         webDataBinder.registerCustomEditor(Date.class, new CustomDateEditor(simpleDateFormat, true));
+        webDataBinder.setValidator(empValid);
     }
 
     @RequestMapping(value = "/hello")
@@ -54,7 +57,14 @@ public class control {
     }
 
     @RequestMapping(value = "/employee", method = RequestMethod.POST)
-    public String saveEmp(@ModelAttribute("emp") empEntity empEntity) throws IOException {
+    public String saveEmp(@ModelAttribute("emp") @Validated empEntity empEntity, BindingResult bindingResult) throws IOException {
+        if (bindingResult.hasErrors()) {
+            System.out.println("Error");
+            System.out.println(bindingResult.getFieldError().getDefaultMessage());
+            return "employee";
+        }
+
+        System.out.println("XXXXXX");
         if (empEntity.getMultipartFile().getSize() > 0) {
             BufferedOutputStream outputStream = new BufferedOutputStream(
                     new FileOutputStream(
@@ -62,11 +72,12 @@ public class control {
             empEntity.setImage(empEntity.getMultipartFile().getOriginalFilename());
             outputStream.write(empEntity.getMultipartFile().getBytes());
             outputStream.close();
-        }else {
-            System.out.println("AAAAAA"+empEntity.getID());
+        } else if (empEntity.getID() != null) {
+            System.out.println("AAAAAA" + empEntity.getID());
             son.Model.empEntity empEntity1 = empService.tim(empEntity.getID());
             empEntity.setImage(empEntity1.getImage());
         }
+
         empService.save(empEntity);
         return "redirect:/employee";
     }
